@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deckmatic — by Partoo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body, #root { height: 100%; }
+  body { font-family: 'DM Sans', sans-serif; background: #F5F6FA; color: #1f2937; }
+  #root { display: flex; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+  input, select, textarea, button { font-family: inherit; }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* Tweaks panel */
+  #tweaks-panel {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 40px rgba(45,53,80,0.18);
+    padding: 20px;
+    width: 230px;
+    z-index: 3000;
+    border: 1px solid #E8EAED;
+  }
+  #tweaks-panel label { display: flex; flex-direction: column; gap: 5px; font-size: 11px; font-weight: 700; color: #6b7280; margin-bottom: 12px; }
+  #tweaks-panel select, #tweaks-panel input[type=range] { width: 100%; border: 1.5px solid #E8EAED; border-radius: 7px; padding: 6px 10px; font-size: 12px; outline: none; font-family: inherit; }
+</style>
+<script src="deckmatic/data.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- Tweaks panel -->
+<div id="tweaks-panel">
+  <div style="font-size:13px;font-weight:800;color:#2D3550;margin-bottom:16px;display:flex;align-items:center;gap:7px;">
+    <svg width="16" height="16" viewBox="0 0 100 100"><circle cx="38" cy="38" r="30" fill="#4285F4" fill-opacity=".8"/><circle cx="62" cy="38" r="30" fill="#FF6B35" fill-opacity=".8"/><circle cx="50" cy="60" r="30" fill="#00C896" fill-opacity=".8"/><circle cx="50" cy="42" r="14" fill="white"/><circle cx="50" cy="42" r="7" fill="#7B61FF"/></svg>
+    Tweaks
+  </div>
+  <label>Page initiale
+    <select id="tweak-page">
+      <option value="dashboard">Dashboard</option>
+      <option value="slides">Slide Browser</option>
+      <option value="templates">Templates</option>
+      <option value="analytics">Analytics</option>
+      <option value="drives">Drives / Upload</option>
+      <option value="tags">Tags</option>
+      <option value="users">Utilisateurs</option>
+    </select>
+  </label>
+  <label>Couleur principale
+    <div style="display:flex;gap:7px;margin-top:3px;">
+      <div class="color-swatch" data-color="#4361EE" style="width:28px;height:28px;border-radius:7px;background:#4361EE;cursor:pointer;outline:2.5px solid #4361EE;outline-offset:2px;" title="Blue (défaut)"></div>
+      <div class="color-swatch" data-color="#2D3550" style="width:28px;height:28px;border-radius:7px;background:#2D3550;cursor:pointer;outline:2px solid transparent;outline-offset:2px;" title="Navy"></div>
+      <div class="color-swatch" data-color="#7C3AED" style="width:28px;height:28px;border-radius:7px;background:#7C3AED;cursor:pointer;outline:2px solid transparent;outline-offset:2px;" title="Violet"></div>
+      <div class="color-swatch" data-color="#059669" style="width:28px;height:28px;border-radius:7px;background:#059669;cursor:pointer;outline:2px solid transparent;outline-offset:2px;" title="Green"></div>
+    </div>
+  </label>
+  <label>Densité de la grille
+    <select id="tweak-grid">
+      <option value="3">3 colonnes</option>
+      <option value="4" selected>4 colonnes</option>
+      <option value="5">5 colonnes</option>
+    </select>
+  </label>
+</div>
+
+<script type="text/babel" src="deckmatic/components.jsx"></script>
+<script type="text/babel" src="deckmatic/Dashboard.jsx"></script>
+<script type="text/babel" src="deckmatic/SlidesBrowser.jsx"></script>
+<script type="text/babel" src="deckmatic/Templates.jsx"></script>
+<script type="text/babel" src="deckmatic/Pages.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "startPage": "dashboard",
+  "gridCols": 4,
+  "accentColor": "#2D3550"
+}/*EDITMODE-END*/;
+
+function App() {
+  const saved = (() => { try { return JSON.parse(localStorage.getItem('deckmatic-v2') || '{}'); } catch(e) { return {}; } })();
+  const [page, setPageRaw] = useState(saved.page || TWEAK_DEFAULTS.startPage);
+  const [toast, setToastMsg] = useState(null);
+  const [preloadTemplate, setPreloadTemplate] = useState(null);
+
+  function setPage(p) {
+    setPageRaw(p);
+    localStorage.setItem('deckmatic-v2', JSON.stringify({ page: p }));
+  }
+
+  useEffect(() => {
+    // Tweaks
+    window.addEventListener('message', e => {
+      if (e.data?.type === '__activate_edit_mode') document.getElementById('tweaks-panel').style.display = 'block';
+      if (e.data?.type === '__deactivate_edit_mode') document.getElementById('tweaks-panel').style.display = 'none';
+    });
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+    document.getElementById('tweak-page').addEventListener('change', e => setPage(e.target.value));
+  }, []);
+
+  const renderPage = () => {
+    switch(page) {
+      case 'dashboard': return <Dashboard setPage={setPage} setPreloadTemplate={setPreloadTemplate} />;
+      case 'slides':    return <SlidesBrowser preloadTemplate={preloadTemplate} setPreloadTemplate={setPreloadTemplate} setToast={setToastMsg} />;
+      case 'templates': return <Templates setPage={setPage} setPreloadTemplate={setPreloadTemplate} setToast={setToastMsg} />;
+      case 'analytics': return <Analytics />;
+      case 'drives':    return <DrivesUpload setToast={setToastMsg} />;
+      case 'tags':      return <TagsPage setToast={setToastMsg} />;
+      case 'users':
+      case 'teams':
+      case 'profile':   return <AdminUsers setToast={setToastMsg} />;
+      default:          return <Dashboard setPage={setPage} setPreloadTemplate={setPreloadTemplate} />;
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+      <TopNav page={page} setPage={setPage} />
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minWidth: 0 }}>
+        {renderPage()}
+      </div>
+      {toast && <Toast message={toast} onDone={() => setToastMsg(null)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<script>
+// Color swatches
+document.querySelectorAll('.color-swatch').forEach(el => {
+  el.addEventListener('click', function() {
+    const color = this.dataset.color;
+    document.querySelectorAll('.color-swatch').forEach(s => s.style.outlineColor = 'transparent');
+    this.style.outlineColor = color;
+    // Inject a CSS override
+    let styleEl = document.getElementById('accent-override');
+    if (!styleEl) { styleEl = document.createElement('style'); styleEl.id = 'accent-override'; document.head.appendChild(styleEl); }
+    // Can't update React state from outside, but we can signal via custom event
+    window.dispatchEvent(new CustomEvent('accentChange', { detail: color }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { accentColor: color } }, '*');
+  });
+});
+</script>
+</body>
+</html>
